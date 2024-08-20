@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Demo;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
@@ -12,13 +13,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RecipeController extends AbstractController
 {
 
+
     #[Route('/recettes', name: 'recipe.index')]
     public function index(Request $request, RecipeRepository $repository): Response
     {
+        
         $recipes = $repository->findWithDurationLowerThan(20);
 
         return $this->render(
@@ -73,7 +77,7 @@ class RecipeController extends AbstractController
         ]);
     }
     #[Route('/recettes/{id}', name: 'recipe.delete', methods: ['DELETE'])]
-    public function remove(Recipe $recipe, EntityManagerInterface $em) 
+    public function remove(Recipe $recipe, EntityManagerInterface $em)
     {
         $em->remove($recipe);
         $em->flush();
