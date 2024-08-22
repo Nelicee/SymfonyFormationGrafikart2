@@ -17,8 +17,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
-#[Route("/admin/recettes", name: 'admin.recipe.' )]
+#[Route("/admin/recettes", name: 'admin.recipe.')]
 class RecipeController extends AbstractController
 {
 
@@ -26,8 +27,8 @@ class RecipeController extends AbstractController
     public function index(RecipeRepository $repository, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
     {
         $recipes = $repository->findWithDurationLowerThan(60);
-      
-        
+
+
 
         return $this->render(
             'admin/recipe/index.html.twig',
@@ -52,11 +53,12 @@ class RecipeController extends AbstractController
             'form' => $form
         ]);
     }
-    
 
-    #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS ]) ]
-    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em)
+
+    #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
+    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em , UploaderHelper $helper)
     {
+        dd($helper->asset($recipe, 'thumbnailFile'));
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,8 +72,8 @@ class RecipeController extends AbstractController
         ]);
     }
 
-   
-    #[Route('/{id}', name: 'delete', methods: ['DELETE'],requirements: ['id' => Requirement::DIGITS ])]
+
+    #[Route('/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => Requirement::DIGITS])]
     public function remove(Recipe $recipe, EntityManagerInterface $em)
     {
         $em->remove($recipe);
