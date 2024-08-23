@@ -26,6 +26,7 @@ class RecipeController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(RecipeRepository $repository, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
     {
+        // $this->denyAccessUnlessGranted('ROLE_USER');
         $recipes = $repository->findWithDurationLowerThan(60);
 
 
@@ -58,7 +59,7 @@ class RecipeController extends AbstractController
     #[Route('/{id}', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => Requirement::DIGITS])]
     public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em , UploaderHelper $helper)
     {
-        dd($helper->asset($recipe, 'thumbnailFile'));
+        
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
