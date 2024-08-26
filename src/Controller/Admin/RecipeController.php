@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,19 +25,22 @@ class RecipeController extends AbstractController
 {
 
     #[Route('/', name: 'index')]
-    public function index(RecipeRepository $repository, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
+    public function index(RecipeRepository $repository, Request $request): Response
     {
         // $this->denyAccessUnlessGranted('ROLE_USER');
-        $recipes = $repository->findWithDurationLowerThan(60);
+        $page = $request->query->getInt('page', 1);
+        $limit = 2;
+        $recipes = $repository->paginateRecipes($page);
+      
+        
 
 
-
-        return $this->render(
-            'admin/recipe/index.html.twig',
-            [
-                'recipes' => $recipes
-            ]
-        );
+        return $this->render('admin/recipe/index.html.twig', [
+            'recipes' => $recipes,
+            // 'maxPage' => $maxPage,
+            // 'page' => $page
+        ]);
+        
     }
     #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $em)
