@@ -19,7 +19,7 @@
                     <td>{{ category.name }}</td>
                     <td>
                         <div class="d-flex gap-1">
-                            <a class="btn btn-primary" href="{{ path('admin.category.edit',{id: category.id} ) }}">Editer</a>
+                            <a class="btn btn-primary" href="{{ path('user.show',{id: user.id} ) }}">Editer</a>
                             <form action="{{ path('admin.category.delete', {id: category.id}) }}" method="post">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button class="btn btn-danger" type="submit">Supprimer</button>
